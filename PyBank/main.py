@@ -1,23 +1,47 @@
-'''
-    Open and read csv
-    Skip header
-    Find the total number of months 
-    Find the avg of changes in profit/loss
-    find the greatest increase in profit, date and month
-    Find the greatest decrease in losses, date and month
-'''
-
 import os
 import csv
+f=open('Analysis\PyBank_analysis.txt', 'w')
+csvpath = os.path.join("Resources", "budget_data.csv")
 
-#Find path
-budget_data = os.path("Resources", "budget_data")
+count=[]
+profitLoss=[]
+change=[]
+date=[]
 
-#Open and Read
-with open(budget_data) as csvfile:
-    csvreader=csv.reader(csvfile, delimiter=",")
+with open(csvpath, 'r') as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=",")
 
-    #Read header row first
-    csv_header=next(csvfile)
+    csv_header = next(csvreader)
+    #print(csv_header)
 
-    print(len(row(0))
+    count=0
+    profitLoss = 0
+    profitLoss_first = 0
+
+    for row in csvreader:
+        count += int(1)
+        date = str(row[0])
+        profitLoss += int(row[1])
+    
+        profitLoss_second = int(row[1])
+        change_value = profitLoss_second - profitLoss_first 
+        change.append(change_value)
+        profitLoss_first = int(row[1])
+
+    avgchange = (sum(change)-change[0])/int(count-1)
+    format_avgchange=format(avgchange, ".2f")
+    maxProfit = max(change)
+    minProfit = min(change)
+
+    #I couldnt get my date to correspond to the max/min change. I know its wrong.
+    # Print report
+    print("Financial Analysis")
+    print("----------------------------")
+    print(f"Total Months: {str(count)}")
+    print(f"Total: ${str(profitLoss)}")
+    print(f"Average Change: ${format_avgchange}")
+    print(f"Greatest Increase in Profits: {str(date)} (${int(maxProfit)})")
+    print(f"Greastest Decrease in Profits: {str(date)} (${int(minProfit)})")
+
+    f.write(f"Financial Analysis\n----------------------------\nTotal Months: {str(count)}\nTotal: ${str(profitLoss)}\nAverage Change: ${(format_avgchange)}\nGreatest Increase in Profits: {str(date)} (${int(maxProfit)})\nGreastest Decrease in Profits: {str(date)} (${int(minProfit)})")
+f.close()
